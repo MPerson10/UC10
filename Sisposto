@@ -1,0 +1,121 @@
+CREATE TABLE rede (
+Id int(02) NOT NULL AUTO_INCREMENT,
+Nome varchar(45) NOT NULL,
+VendaTotal int(16) NOT NULL,
+PRIMARY KEY (Id)
+);
+
+CREATE TABLE posto (
+Id int(03) NOT NULL AUTO_INCREMENT,
+Nome varchar(45) NOT NULL,
+Bandeira varchar(40) NOT NULL,
+RedeId int(02) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (RedeId) REFERENCES rede(Id)
+);
+
+CREATE TABLE posto_endereço (
+Id int(03) NOT NULL AUTO_INCREMENT,
+Logradouro varchar(24) NOT NULL,
+Numero int(05) NOT NULL,
+Cep int(11) NOT NULL,
+Telefone int(16) NOT NULL,
+Cidade varchar(45) NOT NULL,
+Estado varchar(02) NOT NULL,
+PostoId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (PostoId) REFERENCES posto(Id)
+);
+
+CREATE TABLE funcionario (
+Id int(03) NOT NULL,
+CPF int(14) NOT NULL,
+Nome varchar(45) NOT NULL,
+Matricula int(06) NOT NULL,
+PostoId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (PostoId) REFERENCES posto(Id)
+);
+
+CREATE TABLE funcionario_endereço (
+Id int(03) NOT NULL AUTO_INCREMENT,
+Logradouro varchar(24) NOT NULL,
+Numero int(05) NOT NULL,
+Cep int(11) NOT NULL,
+Telefone int(16) NOT NULL,
+Cidade varchar(45) NOT NULL,
+Estado varchar(02) NOT NULL,
+FuncionarioId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (FuncionarioId) REFERENCES funcionario(Id)
+);
+
+CREATE TABLE cliente (
+Id int(07) NOT NULL AUTO_INCREMENT,
+CPF int(14) NOT NULL,
+Nome varchar(45) NOT NULL,
+PostoId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (PostoId) REFERENCES posto(Id)
+);
+
+CREATE TABLE cliente_endereço (
+Id int(03) NOT NULL AUTO_INCREMENT,
+Logradouro varchar(24) NOT NULL,
+Numero int(05) NOT NULL,
+Cep int(11) NOT NULL,
+Telefone int(16) NOT NULL,
+Cidade varchar(45) NOT NULL,
+Estado varchar(02) NOT NULL,
+ClienteId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (ClienteId) REFERENCES cliente(Id)
+);
+
+CREATE TABLE bomba (
+Id int(04) NOT NULL AUTO_INCREMENT,
+Codigo int(06) NOT NULL,
+Qtd_venda int(05) NOT NULL,
+Combustivel varchar(10) NOT NULL,
+PostoId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (PostoId) REFERENCES posto(Id)
+);
+
+CREATE TABLE vendas (
+Id int(11) NOT NULL AUTO_INCREMENT,
+Matricula_func int(06) NOT NULL,
+Tipo_pagto varchar(10) NOT NULL,
+PostoId int(03) NOT NULL,
+ClienteId int(03) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (PostoId) REFERENCES posto(Id),
+FOREIGN KEY (ClienteId) REFERENCES cliente(Id)
+);
+
+CREATE TABLE tipo_pagto (
+Id int(11) NOT NULL AUTO_INCREMENT,
+Credito int(11) NOT NULL,
+Debito int(11) NOT NULL,
+Dinheiro int(11) NOT NULL,
+VendasId int(11) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (VendasId) REFERENCES vendas(Id)
+);
+
+CREATE TABLE estoque (
+Id int(11) NOT NULL AUTO_INCREMENT,
+Qtd_combustivel int(11) NOT NULL,
+VendasId int(11) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (VendasId) REFERENCES vendas(Id)
+);
+
+CREATE TABLE pedido_compra (
+Id int(11) NOT NULL AUTO_INCREMENT,
+Quantidade int(11) NOT NULL,
+Compra_tipo_combustivel int(03) NOT NULL,
+EstoqueId int(11) NOT NULL,
+PRIMARY KEY (Id),
+FOREIGN KEY (EstoqueId) REFERENCES estoque(Id)
+);
